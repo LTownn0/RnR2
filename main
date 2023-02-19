@@ -1,0 +1,58 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+class Main {
+  public static void main(String[] args) {
+    Scanner scan = new Scanner(System.in);
+    ArrayList<Integer> gun = new ArrayList<Integer>(6);
+    RussianRoulette round = new RussianRoulette();
+
+    System.out.println("Welcome to Russian Roulette!\nDo you want to play?");
+    String ans = scan.nextLine();
+    if (ans.toLowerCase().equals("yes")){
+      
+      round.setBullet();
+
+      while (!ans.toLowerCase().equals("no")) {
+        System.out.println("Very well then\nDo you want to shoot yourself(yourself) or shoot the other person(other)?");
+        String userInp = scan.nextLine();
+        try {
+          play(userInp, round);
+        } catch (InterruptedException e) {
+          System.out.println("Thread interrupted while sleeping.");
+        }
+        round.incChamberPos();
+        if (round.getChamberPos() == round.getBullet()) {
+          System.out.println("Do you want to play again?");
+          ans = scan.nextLine();
+        }
+      }
+    }
+  }
+
+  public static void play(String inp, RussianRoulette round) throws InterruptedException {
+
+    for (int i = 0; i < 3; i++) {
+      TimeUnit.SECONDS.sleep(1);
+      System.out.print(". ");
+    }
+    TimeUnit.SECONDS.sleep(1);
+    System.out.println("\nBang!");
+    TimeUnit.SECONDS.sleep(1);
+
+    if (round.getChamberPos() == round.getBullet()) {
+      if (inp.equals("other")) {
+        System.out.println("You killed the other person");
+      } else {
+        System.out.println("You died. Let's revive you and try again.");
+      }
+    } else {
+      if (inp.equals("other")) {
+        System.out.println("They're still alive.");
+      } else {
+        System.out.println("You're still alive.");
+      }
+    }
+  }
+}
